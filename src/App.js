@@ -4,10 +4,10 @@ import Person from "./components/Person";
 class App extends Component {
   state = {
     persons: [
-      { name: "Premnath", age: 29 },
-      { name: "Priyadharsini", age: 27 },
-      { name: "Pichaimuthu", age: 57 },
-      { name: "Padmavathy", age: 42 },
+      { id: "asf111", name: "Premnath", age: 29 },
+      { id: "asf222", name: "Priyadharsini", age: 27 },
+      { id: "asf333", name: "Pichaimuthu", age: 57 },
+      { id: "asf444", name: "Padmavathy", age: 42 },
     ],
     showPersons: false,
   };
@@ -25,19 +25,37 @@ class App extends Component {
     });
   }; */
 
-  nameChangedHandler = (event) => {
+  nameChangedHandler = (event, id) => {
+    const personInx = this.state.persons.findIndex((prsn) => {
+      return prsn.id === id;
+    });
+
+    //const person = Object.assign({}, this.state.persons[personInx]);
+    const person = { ...this.state.persons[personInx] };
+
+    person.name = event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personInx] = person;
+
     this.setState({
-      persons: [
+      persons: persons,
+
+      /*  persons: [
         { name: "Premnath Pichaimuthu", age: 29 },
         { name: event.target.value, age: 27 },
         { name: "Pichaimuthu", age: 57 },
         { name: "Padmavathy", age: 42 },
-      ],
+      ], */
     });
   };
 
   deletePersonHandler = (personIndex) => {
-    const persons = this.state.persons;
+    //mutation
+    //const persons = this.state.persons;
+    //non mutation
+    //const persons = this.state.persons.slice();
+    const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({
       persons: persons,
@@ -76,9 +94,10 @@ class App extends Component {
             return (
               <Person
                 click={() => this.deletePersonHandler(index)}
+                changed={(event) => this.nameChangedHandler(event, person.id)}
                 name={person.name}
                 age={person.age}
-                key={index}
+                key={person.id}
               />
             );
           })}
